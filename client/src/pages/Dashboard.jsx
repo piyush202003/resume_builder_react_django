@@ -1,9 +1,10 @@
-import { PlusIcon, UploadCloudIcon } from 'lucide-react'
+import { FilePenLineIcon, PlusIcon, UploadCloudIcon } from 'lucide-react'
 import { dummyResumeData } from '../assets/assets'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Dashboard = () => {
 
+  const colors = ['#9333ea', '#d97706', '#dc2626', '#0284c7', '#16a34a']
   const [allResumes, setAllResumes] = useState([])
   const loadAllResumes = async () => {
     setAllResumes(dummyResumeData)
@@ -27,7 +28,22 @@ const Dashboard = () => {
             <p className='text-sm group-hover:text-purple-600 transition-all'>Upload Existing</p>
           </button>
         </div>
+        
         <hr className='border-slate-300 my-6 sm:w-[305px]' />
+
+        <div className='grid grid-cols-2 sm:flex flex-wrap gap-4'>
+          {allResumes.map((resume, index)=>{
+            const baseColor = colors[index%colors.length];
+            return (
+              <button key={index} className='relative w-full sm:max-w-36 h-48 flex flex-col items-center justify-center rounded-lg gap-3 border group hover:shadow-lg transition-all duration-300 cursor-pointer' style={{background:`linear-gradient(135deg, ${baseColor}10, ${baseColor}40)`,borderColor:baseColor+'40'}}>
+                <FilePenLineIcon className='size-7 group-hover:scale-105 transition-all' style={{color:baseColor}} />
+                <p className='text-sm group-hover:scale-105 transition-all px-2 text-center'>{resume.title}</p>
+                <p className='absolute bottom-1 text-[11px] text-slate-600 group-hover:text-slate-500 transition-all duration-300 px-2 text-center'>Updated on {new Date(resume.updatedAt).toLocaleDateString()}</p>
+              </button>
+            )
+          })}
+        </div>
+
       </div>
     </div>
   )
