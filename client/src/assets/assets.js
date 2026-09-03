@@ -13,7 +13,7 @@ export const dummyResumeData = [
             profession: "Full Stack Developer",
             image: dummy_profile
         },
-        _id: "68d2a31a1c4dd38875bb037e",
+        id: "68d2a31a1c4dd38875bb037e",
         userId: "68c180acdf1775dfd02c6d87",
         title: "Alex's Resume",
         public: true,
@@ -27,7 +27,7 @@ export const dummyResumeData = [
                 end_date: "Present",
                 description: "Architected, developed, and deployed innovative full-stack applications at Example Technologies.\ncreating robust back-end systems and intuitive front- end interfaces to deliver meaningful digital experiences ",
                 is_current: true,
-                _id: "68d2a31a1c4dd38875bb037f"
+                id: "68d2a31a1c4dd38875bb037f"
             },
             {
                 company: "Example Technologies.",
@@ -36,7 +36,7 @@ export const dummyResumeData = [
                 end_date: "2023-05",
                 description: "Engineered and deployed scalable full-stack web applications for Example Technologies, translating complex requirements into robust front-end interfaces and efficient back-end services.",
                 is_current: false,
-                _id: "68d4f7abc8f0d46dc8a8b114"
+                id: "68d4f7abc8f0d46dc8a8b114"
             }
         ],
         education: [
@@ -46,7 +46,7 @@ export const dummyResumeData = [
                 field: "CSE",
                 graduation_date: "2023-05",
                 gpa: "8.7",
-                _id: "68d2a31a1c4dd38875bb0380"
+                id: "68d2a31a1c4dd38875bb0380"
             },
             {
                 institution: "Example Public School",
@@ -54,7 +54,7 @@ export const dummyResumeData = [
                 field: "PCM",
                 graduation_date: "2019-03",
                 gpa: "",
-                _id: "68d2a31a1c4dd38875bb0381"
+                id: "68d2a31a1c4dd38875bb0381"
             },
             {
                 institution: "Example Academy",
@@ -62,7 +62,7 @@ export const dummyResumeData = [
                 field: "",
                 graduation_date: "2017-03",
                 gpa: "",
-                _id: "68d2a31a1c4dd38875bb0382"
+                id: "68d2a31a1c4dd38875bb0382"
             }
         ],
         template: "minimal-image",
@@ -72,13 +72,13 @@ export const dummyResumeData = [
                 name: "Team Task Management System",
                 type: "Web Application (Productivity Tool)",
                 description: "TaskTrackr is a collaborative task management system designed for teams to create, assign, track, and manage tasks in real time. ",
-                _id: "68d4f882c8f0d46dc8a8b139"
+                id: "68d4f882c8f0d46dc8a8b139"
             },
             {
                 name: "EduHub - Online Learning Platform",
                 type: "Web Application (EdTech Platform)",
                 description: "EduHub is an online learning platform where instructors can create courses with video lessons, quizzes, and downloadable resources.",
-                _id: "68d4f89dc8f0d46dc8a8b147"
+                id: "68d4f89dc8f0d46dc8a8b147"
             }
         ],
         updatedAt: "2025-09-23T13:39:38.395Z",
@@ -96,7 +96,7 @@ export const dummyResumeData = [
             profession: "Frontend Engineer",
             image: dummy_profile
         },
-        _id: "78e3b42c2d5ff49286cc148f",
+        id: "78e3b42c2d5ff49286cc148f",
         userId: "78d2e0bdcf2886efg03e7e98",
         title: "Jordan's Resume",
         public: true,
@@ -110,7 +110,7 @@ export const dummyResumeData = [
                 end_date: "Present",
                 description: "Leading a team of frontend developers to build accessible and scalable user interfaces. Collaborated with UX teams to implement design systems and improve frontend performance.",
                 is_current: true,
-                _id: "78e3b42c2d5ff49286cc1490"
+                id: "78e3b42c2d5ff49286cc1490"
             },
             {
                 company: "PixelForge Labs",
@@ -119,7 +119,7 @@ export const dummyResumeData = [
                 end_date: "2022-01",
                 description: "Developed reusable UI components using React and Vue.js. Worked closely with backend teams to integrate REST APIs and optimize SPA performance.",
                 is_current: false,
-                _id: "78e3b42c2d5ff49286cc1491"
+                id: "78e3b42c2d5ff49286cc1491"
             }
         ],
         education: [
@@ -129,7 +129,7 @@ export const dummyResumeData = [
                 field: "Computer Science",
                 graduation_date: "2018-06",
                 gpa: "3.8",
-                _id: "78e3b42c2d5ff49286cc1492"
+                id: "78e3b42c2d5ff49286cc1492"
             },
             {
                 institution: "Lincoln High School",
@@ -137,7 +137,7 @@ export const dummyResumeData = [
                 field: "Science",
                 graduation_date: "2014-05",
                 gpa: "",
-                _id: "78e3b42c2d5ff49286cc1493"
+                id: "78e3b42c2d5ff49286cc1493"
             }
         ],
         template: "minimal-image",
@@ -147,13 +147,13 @@ export const dummyResumeData = [
                 name: "FitTrack - Fitness Dashboard",
                 type: "Web Application (Health & Fitness)",
                 description: "FitTrack is a fitness analytics dashboard that allows users to log workouts, track progress, and visualize performance through interactive charts.",
-                _id: "78e3b42c2d5ff49286cc1494"
+                id: "78e3b42c2d5ff49286cc1494"
             },
             {
                 name: "ShopEase - E-commerce UI Kit",
                 type: "Frontend UI Kit",
                 description: "ShopEase is a modular e-commerce frontend template with ready-to-use components for product listing, cart management, and responsive navigation.",
-                _id: "78e3b42c2d5ff49286cc1495"
+                id: "78e3b42c2d5ff49286cc1495"
             }
         ],
         updatedAt: "2025-09-25T15:10:21.184Z",
@@ -171,7 +171,7 @@ export const dummyResumeData = [
             profession: "Backend Developer",
             image: dummy_profile
         },
-        _id: "89f4c53d3e6gg59397dd259g",
+        id: "89f4c53d3e6gg59397dd259g",
         userId: "89e3f1cedg3997fgh14f8f09",
         title: "Riley's Resume",
         public: true,
@@ -185,7 +185,7 @@ export const dummyResumeData = [
                 end_date: "Present",
                 description: "Developed distributed microservices using Node.js and Docker. Implemented API rate limiting, authentication, and background job processing using Redis and Bull.",
                 is_current: true,
-                _id: "89f4c53d3e6gg59397dd259h"
+                id: "89f4c53d3e6gg59397dd259h"
             },
             {
                 company: "CloudCore Systems",
@@ -194,7 +194,7 @@ export const dummyResumeData = [
                 end_date: "2021-02",
                 description: "Maintained and scaled backend systems built on Python and PostgreSQL. Automated deployments with GitLab CI/CD and improved API response time by 35%.",
                 is_current: false,
-                _id: "89f4c53d3e6gg59397dd259i"
+                id: "89f4c53d3e6gg59397dd259i"
             }
         ],
         education: [
@@ -204,7 +204,7 @@ export const dummyResumeData = [
                 field: "Information Technology",
                 graduation_date: "2016-05",
                 gpa: "3.9",
-                _id: "89f4c53d3e6gg59397dd259j"
+                id: "89f4c53d3e6gg59397dd259j"
             },
             {
                 institution: "Central High School",
@@ -212,7 +212,7 @@ export const dummyResumeData = [
                 field: "Science",
                 graduation_date: "2012-04",
                 gpa: "",
-                _id: "89f4c53d3e6gg59397dd259k"
+                id: "89f4c53d3e6gg59397dd259k"
             }
         ],
         template: "minimal-image",
@@ -222,13 +222,13 @@ export const dummyResumeData = [
                 name: "Invoicr - Invoice Management System",
                 type: "Web Application (FinTech)",
                 description: "Invoicr is a secure web platform that allows freelancers and small businesses to generate, track, and automate professional invoices. Built with Node.js, MongoDB, and Stripe integration.",
-                _id: "89f4c53d3e6gg59397dd259l"
+                id: "89f4c53d3e6gg59397dd259l"
             },
             {
                 name: "API Monitor Dashboard",
                 type: "DevOps Tool",
                 description: "A real-time API monitoring dashboard for microservices. Tracks latency, uptime, and error rates using Prometheus and Grafana.",
-                _id: "89f4c53d3e6gg59397dd259m"
+                id: "89f4c53d3e6gg59397dd259m"
             }
         ],
         updatedAt: "2025-09-25T15:26:49.652Z",
