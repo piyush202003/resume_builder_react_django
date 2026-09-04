@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { dummyResumeData } from "../assets/assets"
-import { ArrowLeftIcon, Briefcase, ChevronLeft, FileText, FolderIcon, GraduationCap, Sparkles, User } from "lucide-react"
+import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from "lucide-react"
+import PersonalInfoForm from "../components/PersonalInfoForm"
 
 const ResumeBuilder = () => {
 
@@ -74,7 +75,19 @@ const ResumeBuilder = () => {
                       <ChevronLeft className="size-4" /> Previous
                     </button>
                   )}
+                  <button onClick={()=>setActiveSectionIndex((prevIndex)=>Math.min(prevIndex+1, sections.length-1))} className={`flex items-center gap-1 p-3 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition-all ${activeSectionIndex === sections.length-1 && 'opacity-50'}`} disabled={activeSectionIndex === sections.length-1}>
+                    Next <ChevronRight className="size-4" />
+                  </button>
                 </div>
+              </div>
+              
+              {/* Form Content */}
+              <div className="space-y-6">
+                  {activeSection.id === 'personal' && (
+                    <div>
+                      <PersonalInfoForm data={resumeData.personal_info} onChange={(data)=>setResumeData(prev =>({...prev, personal_info:data}))} removeBackground={removeBackground} setRemoveBackground={setRemoveBackground} />
+                    </div>
+                  )}
               </div>
             </div>
           </div>
