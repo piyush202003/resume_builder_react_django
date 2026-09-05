@@ -64,7 +64,7 @@ const ResumeBuilder = () => {
               
               {/* Progress bar using activeSectionIndex */}
               <hr className="absolute top-0 left-0 right-0 border-2 border-gray-200" />
-              <hr className="absolute top-0 left-0 h-1 bg-gradient-to-r from-green-500 to-green-800 border-none transition-all duration-2000" style={{width:`${activeSectionIndex*100/(sections.length - 1)}%`}}/>
+              <hr className="absolute top-0 left-0 h-1 bg-linear-to-r from-green-500 to-green-800 border-none transition-all duration-1000" style={{width:`${activeSectionIndex*100/(sections.length - 1)}%`}}/>
 
               {/* Section Navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
@@ -93,8 +93,13 @@ const ResumeBuilder = () => {
           </div>
 
           {/* Right Panel - Preview */}
-          <div>
+          <div className="lg:col-span-7 max-lg:mt-6"> 
+            
+            <div>
+              {/* Buttons */}
+            </div>
 
+            {/* resume preview */}
           </div>
         </div>
       </div>
