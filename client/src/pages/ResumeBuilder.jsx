@@ -6,6 +6,9 @@ import PersonalInfoForm from "../components/PersonalInfoForm"
 import ResumePreview from "../components/ResumePreview"
 import TemplateSelector from "../components/TemplateSelector"
 import ColorPicker from "../components/ColorPicker"
+import ProfessionalSummary from "../components/ProfessionalSummary"
+import { resume } from "react-dom/server"
+import ExperienceForm from "../components/ExperienceForm"
 
 const ResumeBuilder = () => {
 
@@ -92,6 +95,16 @@ const ResumeBuilder = () => {
                   {activeSection.id === 'personal' && (
                     <div>
                       <PersonalInfoForm data={resumeData.personal_info} onChange={(data)=>setResumeData(prev =>({...prev, personal_info:data}))} removeBackground={removeBackground} setRemoveBackground={setRemoveBackground} />
+                    </div>
+                  )}
+                  {activeSection.id === 'summary' && (
+                    <div>
+                      <ProfessionalSummary data={resumeData.professional_summary} onChange={(summary)=>setResumeData(prev =>({...prev, professional_summary:summary}))} setResumeData={setResumeData} />
+                    </div>
+                  )}
+                  {activeSection.id === 'experience' && (
+                    <div>
+                      <ExperienceForm data={resumeData.experience} onChange={(data)=>setResumeData(prev => ({...prev, experience:data}))} />
                     </div>
                   )}
               </div>
