@@ -5,6 +5,7 @@ import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIc
 import PersonalInfoForm from "../components/PersonalInfoForm"
 import ResumePreview from "../components/ResumePreview"
 import TemplateSelector from "../components/TemplateSelector"
+import ColorPicker from "../components/ColorPicker"
 
 const ResumeBuilder = () => {
 
@@ -70,8 +71,9 @@ const ResumeBuilder = () => {
 
               {/* Section Navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
-                <div>
+                <div className="flex items-center gap-2">
                   <TemplateSelector selectedTemplate={resumeData.template} onChange={(templateId) =>{setResumeData(prev => ({...prev, template:templateId}))}} />
+                  <ColorPicker selectedColor={resumeData.accent_color} onChange={(colorValue)=>{setResumeData(prev=>({...prev, accent_color:colorValue}))}} />
                 </div>
                 <div className="flex items-center ">
                   {activeSectionIndex !== 0 && (
