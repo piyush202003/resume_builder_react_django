@@ -29,7 +29,7 @@ const ExperienceForm = ({data, onChange}) => {
                 <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900">Professional Experience</h3>
                 <p className="text-sm text-gray-500">Add your job experience</p>
             </div>
-            <button onClick={addExperience} className="flex items-center gap-2 px-3 py-1 text-sm bg-purple-100 text-purple-700 rounded hover:bg-purple-200">
+            <button onClick={addExperience} className="flex items-center gap-2 px-3 py-1 text-sm bg-green-100 text-geen-700 rounded-lg hover:bg-green-200">
                 <Plus className="size-4" />
                 Add Experience
             </button>
@@ -58,7 +58,7 @@ const ExperienceForm = ({data, onChange}) => {
                             <input value={experience.end_date || ''} onChange={(e)=>updateExperience(index, 'end_date', e.target.value)} type="month" disabled={experience.is_current} className="px-3 py-2 text-sm rounded-lg disabled:bg-gray-100" />
                         </div>
 
-                        <label htmlFor="">
+                        <label htmlFor="" className="flex items-center gap-2">
                             <input type="checkbox" checked={experience.is_current || false} onChange={(e)=>{updateExperience(index, 'is_current', e.target.checked ? true : false); }} className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
                             <span className="text-sm text-gray-700">Currently working</span>
                         </label>
