@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { dummyResumeData } from "../assets/assets"
-import { ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from "lucide-react"
+import { ActivitySquare, ArrowLeftIcon, Briefcase, ChevronLeft, ChevronRight, FileText, FolderIcon, GraduationCap, Sparkles, User } from "lucide-react"
 import PersonalInfoForm from "../components/PersonalInfoForm"
 import ResumePreview from "../components/ResumePreview"
 import TemplateSelector from "../components/TemplateSelector"
@@ -10,6 +10,7 @@ import ProfessionalSummary from "../components/ProfessionalSummary"
 import { resume } from "react-dom/server"
 import ExperienceForm from "../components/ExperienceForm"
 import EducationForm from "../components/EducationForm"
+import ProjectForm from "../components/ProjectForm"
 
 const ResumeBuilder = () => {
 
@@ -105,12 +106,17 @@ const ResumeBuilder = () => {
                   )}
                   {activeSection.id === 'experience' && (
                     <div>
-                      <ExperienceForm data={resumeData.experience} onChange={(data)=>setResumeData(prev => ({...prev, experience:data}))} />
+                      <ExperienceForm data={resumeData.experience} onChange={(data) => setResumeData(prev => ({...prev, experience:data}))} />
                     </div>
                   )}
                   {activeSection.id === 'education' && (
                     <div>
                       <EducationForm data={resumeData.education} onChange={(data) => setResumeData(prev => ({...prev, education:data}))} />
+                    </div>
+                  )}
+                  {activeSection.id === 'projects' && (
+                    <div>
+                      <ProjectForm data={resumeData.project} onChange={(data) => setResumeData(prev => ({...prev, project:data}))} />
                     </div>
                   )}
               </div>
