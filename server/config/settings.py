@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'rest_framework',
     'rest_framework_simplejwt',
+]+[
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -65,8 +67,9 @@ REST_FRAMEWORK = {
     ),
 }
 
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
 
