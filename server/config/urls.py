@@ -22,7 +22,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/auth/', include('accounts.urls')),
+    path('api/users/', include('accounts.urls')),
     path('api/resume/', include('app_resume.urls')),
 ]+[
     path("__reload__/",include("django_browser_reload.urls")),
