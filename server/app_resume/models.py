@@ -38,12 +38,12 @@ class Skills(models.Model):
         # to updated time in ResumeData after making changes in this tables 
         self.resume.save(update_fields=["updated_at"])
 
-def resume_image_path(instance, filename):
-    return f"resume_images/{instance.resume.id}_{filename}"
+# def resume_image_path(instance, filename):
+#     return f"resume_images/{instance.resume.id}_{filename}"
 class PersonalInfo(models.Model):
     """Model definition for PersonalInfo."""
     resume = models.OneToOneField( ResumeData, on_delete=models.CASCADE, related_name='personal_info' )
-    image = models.FileField( upload_to=resume_image_path, blank=True, null=True )
+    image = models.URLField( blank=True)
     full_name = models.CharField( max_length=30, blank=True )
     profession = models.CharField( max_length=30, blank=True )
     email = models.EmailField( blank=True )

@@ -25,6 +25,7 @@ urlpatterns = [
     path('api/users/', include('accounts.urls')),
     path('api/resume/', include('app_resume.urls')),
 ]+[
+    path("api-auth/", include("rest_framework.urls")),
     path("__reload__/",include("django_browser_reload.urls")),
 ]
 
