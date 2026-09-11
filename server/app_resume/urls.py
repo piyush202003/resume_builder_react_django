@@ -9,5 +9,6 @@ urlpatterns = [
     path('update/<int:resume_id>/', ResumeUpdateAPIView.as_view(), name='resume_update'), 
     path('ai/enchance-pro-sum/', EnhanceProfessionalSummaryAPIView.as_view(), name='ai_professional_summary'),
     path('ai/enhance-job-desc/', EnhanceJobDescriptionAPIView.as_view(), name='ai_job_description'),
+    path('upload/', UploadResumeAPIView.as_view(), name='upload_resume'),
      
 ]  
