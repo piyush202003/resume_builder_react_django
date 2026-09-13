@@ -1,27 +1,40 @@
 import { Lock, Mail, User2Icon } from "lucide-react"
 import React from "react"
+import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import api from "../config/api"
+import { login } from "../app/features/authSlice"
 
-export default function App() {
+export default function Login() {
 
+  const dispatch = useDispatch()
   const query = new URLSearchParams(window.location.search)
   const urlState = query.get('state')
 
     const [state, setState] = React.useState( urlState || "login")
 
     const [formData, setFormData] = React.useState({
-        name: '',
-        email: '',
-        password: ''
+      username: '',
+      email: '',
+      password: ''
     })
 
     const handleSubmit = async (e) => {
-        e.preventDefault()
-
+      e.preventDefault()
+      try {
+        const { data } = await api.post(`api/users/${state}/`, formData)
+        dispatch(login(data))
+        localStorage.setItem('token', data.token)
+        console.log(data)
+        toast.success(data.message)
+      } catch (error) {
+        toast(error.response?.data?.non_field_errors?.[0] || error.message )
+      }
     }
 
     const handleChange = (e) => {
-        const { name, value } = e.target
-        setFormData(prev => ({ ...prev, [name]: value }))
+      const { name, value } = e.target
+      setFormData(prev => ({ ...prev, [name]: value }))
     }
 
     return (
@@ -32,7 +45,7 @@ export default function App() {
           {state !== "login" && (
             <div className="flex items-center mt-6 w-full bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">
               <User2Icon size={16} color="#6B7280" />
-              <input type="text" name="name" placeholder="Name" className="border-none outline-none ring-0" value={formData.name} onChange={handleChange} required />
+              <input type="text" name="username" placeholder="Username" className="border-none outline-none ring-0" value={formData.username} onChange={handleChange} required />
             </div>
           )}
           <div className="flex items-center w-full mt-4 bg-white border border-gray-300/80 h-12 rounded-full overflow-hidden pl-6 gap-2">

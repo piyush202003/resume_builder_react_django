@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'django_browser_reload',
     'rest_framework',
     'rest_framework_simplejwt',
+    'corsheaders',
 ]+[
     'accounts',
     'app_resume',
@@ -45,6 +46,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]+[
     'django_browser_reload.middleware.BrowserReloadMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 REST_FRAMEWORK = {
@@ -54,11 +56,15 @@ REST_FRAMEWORK = {
     
 }
 
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
 }
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+]
 
 ROOT_URLCONF = 'config.urls'
 
