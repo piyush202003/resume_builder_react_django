@@ -6,9 +6,10 @@ import Dashboard from './pages/Dashboard'
 import Preview from './pages/Preview'
 import Login from './pages/Login'
 import { useDispatch } from 'react-redux'
-import { setLoading } from './app/features/authSlice'
+import { login, setLoading } from './app/features/authSlice'
 import { useEffect } from 'react'
-import { Toaster } from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
+import api from './config/api'
 
 function App() {
 
@@ -18,7 +19,7 @@ function App() {
     try{
       if(token){
         const { data } = await api.get('api/users/data/', {
-          headers:{Authorization:token}
+          headers:{Authorization:`Bearer ${token}`}
         })
         if(data.user){
           dispatch(login({token, user: data.user}))
@@ -29,7 +30,6 @@ function App() {
       }
     }catch(error){
       dispatch(setLoading(false))
-      console.log(error.message)
     }
   }
 

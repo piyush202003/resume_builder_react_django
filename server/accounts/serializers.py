@@ -61,9 +61,12 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [ 'id', 'username', 'email', ]
+        read_only_fileds = [ 'id' ]
 
 class UserResumesInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ResumeData
-        fields = [ 'title', 'created_at', 'updated_at' ]
+        fields = [ 'id', 'title', 'created_at', 'updated_at' ]
+        read_only_fileds = [ 'id' ]
+    

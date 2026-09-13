@@ -12,10 +12,14 @@ import ExperienceForm from "../components/ExperienceForm"
 import EducationForm from "../components/EducationForm"
 import ProjectForm from "../components/ProjectForm"
 import SkillsForm from "../components/SkillsForm"
+import api from "../config/api"
+import { useSelector } from "react-redux"
+import toast from "react-hot-toast"
 
 const ResumeBuilder = () => {
 
   const {resumeId} = useParams()
+  const { token } = useSelector(state => state.auth)
 
   const [resumeData, setResumeData] = useState({
     id:'',
@@ -58,6 +62,12 @@ const ResumeBuilder = () => {
 
   const changeResumeVisibility = async () => {
     setResumeData({...resumeData, public: !resumeData.public})
+    try {
+      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:{public:resumeData.public}}, {headers:{Authorization:`Bearer ${token}`}})
+      toast.success('Resume public status updated')
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error?.message)
+    }
   }
 
   const handleShare = () =>{

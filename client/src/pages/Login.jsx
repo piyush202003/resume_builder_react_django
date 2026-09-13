@@ -25,7 +25,6 @@ export default function Login() {
         const { data } = await api.post(`api/users/${state}/`, formData)
         dispatch(login(data))
         localStorage.setItem('token', data.token)
-        console.log(data)
         toast.success(data.message)
       } catch (error) {
         toast(error.response?.data?.non_field_errors?.[0] || error.message )

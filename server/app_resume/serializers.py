@@ -15,26 +15,31 @@ class PerosnalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalInfo
         fields = '__all__'
+        read_only_fileds = [ 'id' ]
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
         fields = '__all__'
+        read_only_fileds = [ 'id' ]
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
+        read_only_fileds = [ 'id' ]
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
         fields = '__all__'
+        read_only_fileds = [ 'id' ]
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skills
         fields = [ 'id', 'type' ]
+        read_only_fileds = [ 'id' ]
 
 class PublicResumeSerializer(serializers.ModelSerializer):
     personal_info = PerosnalInfoSerializer(read_only=True)
@@ -46,3 +51,4 @@ class PublicResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResumeData
         fields = [ 'id', 'title', 'template', 'accent_color', 'professional_summary', 'updated_at', 'personal_info', 'experiences', 'projects', 'educations', 'skills']
+        read_only_fileds = [ 'id' ]

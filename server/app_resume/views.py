@@ -39,7 +39,7 @@ class ResumeDeleteAPIView(APIView):
         resume.delete()
         return Response({
             'message':'Resume deleted successfully.'
-        },status=status.HTTP_204_NO_CONTENT)
+        },status=status.HTTP_200_OK)
 
 class ResumeDetailsAPIView(APIView):
     permission_classes=[IsAuthenticated]
@@ -95,8 +95,11 @@ class ResumeUpdateAPIView(APIView):
             personal_info.save()
 
         return Response(
-            ResumeSerializer(resume).data,
-            status=status.HTTP_200_OKs
+            {
+                'message':'Resume updated',
+                'resume': ResumeSerializer(resume).data
+            },
+            status=status.HTTP_200_OK
         )
 
 class EnhanceProfessionalSummaryAPIView(APIView):
@@ -222,6 +225,7 @@ class UploadResumeAPIView(APIView):
         except Exception as error:
             message = error.body[0]["error"]["message"]
             # message = error.body[0].get("error", {}).get("message", "Permission denied")
+            # print(error, vars(error.body[0]))
             return Response(
                 {'error':message},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

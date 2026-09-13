@@ -57,13 +57,13 @@ class UserDataApiView(APIView):
         return Response({
             'message':'Got User Details',
             'user':serializer.data
-        }, status=status.HTTP_302_FOUND)
+        }, status=status.HTTP_200_OK)
 
 class UserResumesApiView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
         resumes = ResumeData.objects.filter(user=request.user)
-        serializer = UserResumesInfoSerializer(resumes)
+        serializer = UserResumesInfoSerializer(resumes, many=True)
         return Response({
             'message': 'Got all your Resumes',
             'resumes': serializer.data,
