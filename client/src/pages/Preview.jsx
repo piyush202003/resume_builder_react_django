@@ -4,14 +4,25 @@ import { dummyResumeData } from '../assets/assets'
 import Loader from '../components/Loader'
 import ResumePreview from '../components/ResumePreview'
 import { ArrowLeftIcon } from 'lucide-react'
+import api from '../config/api'
+import { useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
 
 const Preview = () => {
+
+  const { token } = useSelector(state => state.auth)
   const { resumeId } = useParams()
   const [ resumeData , setResumeData ] = useState(true)
   const [ isLoading, setIsLoading ] = useState(false)
 
-  const loadResumeData = () =>{
-    setResumeData(dummyResumeData.find(resume => resume.id === resumeId || null))
+  const loadResumeData = async () =>{
+    // setResumeData(dummyResumeData.find(resume => resume.id === resumeId || null))
+    try {
+      const { data } = await api.get(`api/resume/public/${resumeId}/`)
+      setResumeData(data)
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error?.message)
+    }
   }
 
   useEffect(()=>{

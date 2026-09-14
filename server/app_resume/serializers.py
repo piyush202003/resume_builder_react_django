@@ -41,7 +41,7 @@ class SkillSerializer(serializers.ModelSerializer):
         fields = [ 'id', 'type' ]
         read_only_fileds = [ 'id' ]
 
-class PublicResumeSerializer(serializers.ModelSerializer):
+class ResumeAllDetailsSerializer(serializers.ModelSerializer):
     personal_info = PerosnalInfoSerializer(read_only=True)
     experiences = ExperienceSerializer(many=True, read_only=True)
     projects = ProjectSerializer(many=True, read_only=True)

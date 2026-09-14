@@ -13,7 +13,7 @@ from .gemini_summariser import ai_job_description, ai_professional_summary, ai_u
 from .imagekit_client import upload_resume_image
 
 from .models import Education, Experience, PersonalInfo, Project, ResumeData, Skills
-from .serializers import PublicResumeSerializer, ResumeSerializer
+from .serializers import ResumeAllDetailsSerializer, ResumeSerializer
 
 # Create your views here.
 class ResumeCreateAPIView(APIView):
@@ -51,7 +51,7 @@ class ResumeDetailsAPIView(APIView):
                 {'error':'Resume not found.'},
                 status=status.HTTP_404_NOT_FOUND
             )
-        serializer=ResumeSerializer(resume)
+        serializer=ResumeAllDetailsSerializer(resume)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK
@@ -66,7 +66,7 @@ class ResumePublicDetailsAPIView(APIView):
                 {"error":"Public resume not found."},
                 status=status.HTTP_404_NOT_FOUND
             )
-        serializer = PublicResumeSerializer(resume)
+        serializer = ResumeAllDetailsSerializer(resume)
         return Response(
             serializer.data,
             status=status.HTTP_200_OK
@@ -82,7 +82,6 @@ class ResumeUpdateAPIView(APIView):
                 {'error':'Resume not found.'},
                 status=status.HTTP_404_NOT_FOUND
             )
-
         serializer = ResumeSerializer(resume, data=request.data['resumeData'], partial=True)
         serializer.is_valid(raise_exception=True)
         resume = serializer.save()
@@ -217,7 +216,7 @@ class UploadResumeAPIView(APIView):
                         graducation_date=education_data.get('graducatoin_date'),
                         gpa=education_data.get('gpa', '')
                     )
-            serializer = PublicResumeSerializer(resume)
+            serializer = ResumeAllDetailsSerializer(resume)
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED

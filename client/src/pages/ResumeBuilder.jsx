@@ -35,10 +35,15 @@ const ResumeBuilder = () => {
   })
 
   const loadExistingResume = async () =>{
-    const resume = dummyResumeData.find(resume => resume.id === resumeId)
-    if(resume){
-      setResumeData(resume)
-      document.title = resume.title
+    try {
+      const { data } = await api.get(`api/resume/details/${resumeId}/`, {headers:{Authorization:`Bearer ${token}`}})
+      if (data.personal_info===null){
+        data.personal_info={}
+      }
+      setResumeData(data)
+      document.title = data.title
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error?.message)
     }
   }
 
@@ -61,9 +66,10 @@ const ResumeBuilder = () => {
   },[])
 
   const changeResumeVisibility = async () => {
-    setResumeData({...resumeData, public: !resumeData.public})
+    
     try {
-      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:{public:resumeData.public}}, {headers:{Authorization:`Bearer ${token}`}})
+      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:{public:!resumeData.public}}, {headers:{Authorization:`Bearer ${token}`}})
+      setResumeData({...resumeData, public: !resumeData.public})
       toast.success('Resume public status updated')
     } catch (error) {
       toast.error(error?.response?.data?.error || error?.message)
@@ -83,6 +89,27 @@ const ResumeBuilder = () => {
 
   const downloadResume = () =>{
     window.print();
+  }
+
+  const saveResume = async () =>{
+    try {
+      let updatedResumeData = structuredClone(resumeData)
+
+      // remove image from updatedResumeData
+      if(typeof resumeData.personal_info.image === 'object'){
+        delete updatedResumeData.personal_info.image
+      }
+
+      const formData = new formData();
+      formData.append('resumeId', resumeId)
+      formData.append('resumeData', JSON.stringify(updatedResumeData))
+      removeBackground && formData.append('removeBackground', true)
+      typeof resumeData.personal_info.image === 'object' && formData.append('image', resumeData.personal_info.image)
+      
+      const { data } = await api.patch()
+    } catch (error) {
+      toast.error(error?.response?.data?.error || error?.message)
+    }
   }
 
   return (
