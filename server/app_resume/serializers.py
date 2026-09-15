@@ -20,26 +20,33 @@ class PersonalInfoSerializer(serializers.ModelSerializer):
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
-        fields = '__all__'
-        read_only_fileds = [ 'id', 'resume' ]
+        fields = [ 'id', 'company', 'position', 'start_date', 'end_date', 'description', 'is_current']
+        read_only_fileds = [ 'id' ]
+
+    def validate(self, attrs):
+        if attrs.get('is_current') and attrs.get('end_date'):
+            raise serializers.ValidationError({
+                'error':'Current experience should not ave an end date'
+            })
+        return attrs
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = '__all__'
-        read_only_fileds = [ 'id', 'resume' ]
+        fields = [ 'id', 'name', 'project_type', 'description', 'github_url', 'live_url' ]
+        read_only_fileds = [ 'id' ]
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
-        fields = '__all__'
-        read_only_fileds = [ 'id', 'resume' ]
+        fields = [ 'id', 'institution', 'degree', 'field', 'start_date', 'graduation_date', 'gpa']
+        read_only_fileds = [ 'id' ]
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skills
         fields = [ 'id', 'type' ]
-        read_only_fileds = [ 'id', 'resume' ]
+        read_only_fileds = [ 'id' ]
 
 class ResumeAllDetailsSerializer(serializers.ModelSerializer):
     personal_info = PersonalInfoSerializer(read_only=True)

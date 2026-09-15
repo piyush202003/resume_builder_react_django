@@ -93,6 +93,7 @@ const ResumeBuilder = () => {
   }
 
   const saveResume = async () =>{
+    // update personal info
     try {
       const formData = new FormData();
 
@@ -102,15 +103,8 @@ const ResumeBuilder = () => {
       // Don't send image inside personalInfo
       delete updatedPersonalInfo.image;
 
-      formData.append(
-        'personalInfo',
-        JSON.stringify(updatedPersonalInfo)
-      );
-
-      formData.append(
-        'removeBackground',
-        String(removeBackground)
-      );
+      formData.append('personalInfo',JSON.stringify(updatedPersonalInfo));
+      formData.append('removeBackground',String(removeBackground));
 
       // Only append if it's actually a new File
       if (image instanceof File) {
@@ -127,12 +121,9 @@ const ResumeBuilder = () => {
         }
       );
 
-      setResumeData(prev => ({
-        ...prev,
-        personal_info: data.personal_info,
-      }));
+      setResumeData(prev => ({...prev,  personal_info: data.personal_info,}));
 
-      toast.success(data.message);
+      // toast.success(data.message);
     } catch (error) {
       toast.error(
         error?.response?.data?.error ||
@@ -141,6 +132,9 @@ const ResumeBuilder = () => {
         'Something went wrong'
       );
     }
+
+    // Update professional summary
+    saveResumeDetails('professional_summary', resumeData.professional_summary)
 
   }
 

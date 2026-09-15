@@ -71,7 +71,7 @@ class Experience(models.Model):
     resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='experience')
     company = models.CharField( max_length=150, blank=True )
     position = models.CharField( max_length=150, blank=True)
-    start_date = models.DateField( blank=True)
+    start_date = models.DateField( blank=True, null=True)
     end_date = models.DateField( blank=True, null=True )
     description = models.TextField( max_length=2000, blank=True)
     is_current = models.BooleanField( default=False )

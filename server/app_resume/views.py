@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db import transaction
 from django.shortcuts import render
 
+from httpx import delete
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -16,7 +17,7 @@ from .gemini_summariser import ai_job_description, ai_professional_summary, ai_u
 from .imagekit_client import upload_resume_image
 
 from .models import Education, Experience, PersonalInfo, Project, ResumeData, Skills
-from .serializers import PersonalInfoSerializer, ResumeAllDetailsSerializer, ResumeSerializer
+from .serializers import EducationSerializer, ExperienceSerializer, PersonalInfoSerializer, ProjectSerializer, ResumeAllDetailsSerializer, ResumeSerializer, SkillSerializer
 
 # Create your views here.
 class ResumeCreateAPIView(APIView):
@@ -118,7 +119,7 @@ class EnhanceProfessionalSummaryAPIView(APIView):
                 {'error':error.body[0]["error"]["message"]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
+        print('AI response =', response)
         return Response(
             {'enhancedContent':response},
             status=status.HTTP_200_OK
@@ -290,5 +291,215 @@ class PersonalInfoUpdateAPIView(APIView):
                 'personal_info': serializer.data,
                 'message': 'Personal Info has been updated'
             },
+            status=status.HTTP_200_OK
+        )
+
+class ExperienceAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self, request, resume_id):
+        try:
+            resume = ResumeData.objects.get(id=resume_id, user=request.user)
+        except ResumeData.DoesNotExist:
+            return Response(
+                {'error':'Resume not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ExperienceSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        experience = serializer.save(resume=resume)
+        return Response(
+            ExperienceSerializer(experience).data,
+            status = status.HTTP_201_CREATED
+        )
+
+class ExperienceUpdateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def patch(self, request, resume_id, experience_id):
+        try:
+            experience = Experience.objects.get(
+                id=experience_id,
+                resume_id=resume_id,
+                resume__user=request.user
+            )
+        except Experience.DoesNotExist:
+            return Response(
+                {'error':'Experience not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        serializer = ExperienceSerializer(experience, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class ExperienceDeleteAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def delete(self, request, resume_id, experience_id):
+        try:
+            experience=Experience.objects.get(
+                id=experience_id,
+                resume_id=resume_id,
+                resume__user=request.user
+            )
+        except Experience.DoesNotExist:
+            return Response(
+                {'error':'Experience not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        experience.delete()
+        return Response(
+            {'message':'Experience deleted successfully.'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+
+class ProjectCreateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self, request, resume_id):
+        try:
+            resume= ResumeData.objects.get(id=resume_id, user=request.user)
+        except ResumeData.DoesNotExist:
+            return Response(
+                {'error':'Resume not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = ProjectSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        project = serializer.save(resume=resume)
+        return Response(
+            {
+                'project':ProjectSerializer(project),
+                'message':'New Project slot is created.'
+            },
+            status=status.HTTP_201_CREATED
+        )
+
+class ProjectUpdateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def patch(self, request, resume_id, project_id):
+        try:
+            project = Project.objects.get(id=project_id, resume_id=resume_id, resume__user=request.user)
+        except Project.DoesNotExist:
+            return Response(
+                {'error':'Project not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = ProjectSerializer(project, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data)
+
+class ProjectDeleteAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def delete(self, request, resume_id, project_id):
+        try:
+            project = Project.objects.get(
+                id=project_id, 
+                resume_id=resume_id,
+                resume__user=request.user
+            )
+        except Project.DoesNotExist:
+            return Response(
+                {'error':'Project not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        project.delete()
+        return Response(
+            {'message':'Project deleted successfully.'},
+            status=status.HTTP_204_NO_CONTENT
+        )
+
+class EducationCreateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self, request, resume_id):
+        try:
+            resume = ResumeData.objects.get(id=resume_id, user=request.user)
+        except ResumeData.DoesNotExist:
+            return Response(
+                {'error':'Resume did not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = EducationSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        education = serializer.save(resume=resume)
+        return Response(
+            {
+                'education':EducationSerializer(education),
+                'message':'New Education slot has been created.'
+            },
+            status=status.HTTP_200_OK
+        )
+
+class EducationUpdateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def patch(self, request, resume_id, education_id):
+        try:
+            education = Education.objects.get(id=education_id, resume_id=resume_id, resume__user=request.user)
+        except Education.DoesNotExist:
+            return Response(
+                {'error':'Education did not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = EducationSerializer(education, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK
+        )
+
+class EducationDeleteAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def delete(self, request, resume_id, education_id):
+        try:
+            education = Education.objects.get(id=education_id, resume_id=resume_id, resume__user=request.user)
+        except Education.DoesNotExist:
+            return Response(
+                {'error':'Education slot did not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        education.delete()
+        return Response(
+            {'message':'Education slot has been deleted.'},
+            status=status.HTTP_200_OK
+        )
+
+class SkillCreateAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def post(self, request, resume_id):
+        try:
+            resume =ResumeData.objects.get(
+                id=resume_id, user=request.user
+            )
+        except ResumeData.DoesNotExist:
+            return Response(
+                {'error':'Resume did not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        serializer = SkillSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        skill = serializer.save(resume=resume)
+        return Response(
+            SkillSerializer(skill).data,
+            status=status.HTTP_201_CREATED
+        )
+
+class SkillDeleteAPIView(APIView):
+    permission_classes=[IsAuthenticated]
+    def delete(self, request, resume_id, skill_id):
+        try:
+            skill = Skills.objects.get(id=skill_id, resume_id=resume_id, reusme__user=request.user)
+        except Skills.DoesNotExist:
+            return Response(
+                {'error':"Skill not found."},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        skill.delete()
+        return Response(
+            {'message':'Skill has been deleted.'},
             status=status.HTTP_200_OK
         )
