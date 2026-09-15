@@ -1,26 +1,75 @@
-import { Briefcase, Plus, Sparkles, Trash2Icon } from "lucide-react"
+import { Briefcase, Loader2, Plus, Sparkles, Trash2Icon } from "lucide-react"
+import api from "../config/api";
+import { useSelector } from "react-redux";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
-const ExperienceForm = ({data, onChange}) => {
-    const addExperience = () =>{
+const ExperienceForm = ({experiences, onChange, resumeId}) => {
+    
+    const { token } = useSelector(state => state.auth)
+    const [ isGenerating, setIsGenerating ] = useState(false)
+
+    const addExperience = async () =>{
         const newExperience = {
             company:'',
             position:'',
-            start_data:'',
-            end_data:'',
+            start_date:null,
+            end_date:null,
             description:'',
             is_current: false
         };
-        onChange([...data, newExperience])
+        try {
+            const { data } = await api.post(`api/resume/${resumeId}/experiences/`, newExperience, {headers:{Authorization:`Bearer ${token}`}})
+            console.log('is this working=', data.experience)
+            onChange([...experiences, data.experience])
+            toast.success('New Experience slot created.')
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
     }
-    const removeExperience = (index) =>{
-        const updated = data.filter((_, i)=> i !== index);
+    const removeExperience = async (index, experienceId) =>{
+        try {
+            const { data } = await api.delete(`api/resume/${resumeId}/experiences/${experienceId}/delete/`, {headers:{Authorization:`Bearer ${token}`}})
+            const updated = experiences.filter((_, i)=> i !== index);
+            onChange(updated)
+            toast.success(data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
+    }
+    
+    const updateExperience = (index, field, value)=>{
+        const updated = [...experiences];
+        updated[index] = {...updated[index], [field]:value}
         onChange(updated)
     }
 
-    const updateExperience = (index, field, value)=>{
-        const updated = [...data];
-        updated[index] = {...updated[index], [field]:value}
-        onChange(updated)
+    const enhanceDescription = async (index, description)=>{
+        setIsGenerating(true)
+        try {
+            const { data } = await api.post(`api/resume/ai/enhance-job-desc/`, {userContent:description}, {headers:{Authorization:`Bearer ${token}`}})
+            console.log(data)
+            updateExperience(index, 'description', data.enhancedContent)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        } finally{
+            setIsGenerating(false)
+        }
     }
     return (
     <div className="space-y-6">
@@ -35,7 +84,7 @@ const ExperienceForm = ({data, onChange}) => {
             </button>
         </div>
 
-        {data.length === 0 ? (
+        {experiences.length === 0 ? (
             <div className="text-center py-8 text-gray-500">
                 <Briefcase className="w-12 h-12 mx-auto mb-3 text-gray-300" />
                 <p>No work experience added yet.</p>
@@ -43,11 +92,11 @@ const ExperienceForm = ({data, onChange}) => {
             </div>
         ): (
             <div className="space-y-4">
-                {data.map((experience, index)=>(
+                {experiences.map((experience, index)=>(
                     <div key={index} className="p-4 border bordery-gray-200 rounded-lg space-y-3">
                         <div className="flex justify-between items-start">
                             <h4>Experience  #{index + 1}</h4>
-                            <button onClick={()=> removeExperience(index)} className='text-red-500 hover:text-red-700 transition-colors'>
+                            <button onClick={()=> removeExperience(index, experience.id)} className='text-red-500 hover:text-red-700 transition-colors'>
                                 <Trash2Icon className='size-4' />
                             </button>
                         </div>
@@ -66,8 +115,9 @@ const ExperienceForm = ({data, onChange}) => {
                         <div className="space-y-2">
                             <div className="flex items-center justify-between">
                                 <label htmlFor="" className="text-sm font-medium text-gray-700">Job Description</label>
-                                <button className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50">
-                                    <Sparkles className="w-3 h-3" /> Enhance with AI
+                                <button disabled={isGenerating} onClick={()=>enhanceDescription(index, experience.description)} className="flex items-center gap-1 px-2 py-1 text-xs bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition-colors disabled:opacity-50">
+                                    {isGenerating ? (<Loader2 className="size-4 animate-spin" />): (<Sparkles className="w-3 h-3" />)}
+                                    {isGenerating ? 'Enhancing...' : 'Enhance with AI'}
                                 </button>
                             </div>
                             <textarea value={experience.description || ''} onChange={(e)=>{updateExperience(index, 'description', e.target.value)}} rows={4} className="w-full text-sm px-3 py-2 rounded-lg resize-none" placeholder="Describe your key responsibilities and achievements..."></textarea>

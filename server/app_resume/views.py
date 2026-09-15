@@ -141,7 +141,7 @@ class EnhanceJobDescriptionAPIView(APIView):
                 {'error':error.body[0]["error"]["message"]},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-
+        
         return Response(
             {'enhancedContent':response},
             status=status.HTTP_200_OK
@@ -308,8 +308,12 @@ class ExperienceAPIView(APIView):
         serializer = ExperienceSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         experience = serializer.save(resume=resume)
+
         return Response(
-            ExperienceSerializer(experience).data,
+            {
+                'experience':ExperienceSerializer(experience).data,
+                'message':'New slot for experience has been created.'
+            },
             status = status.HTTP_201_CREATED
         )
 
@@ -353,7 +357,7 @@ class ExperienceDeleteAPIView(APIView):
         experience.delete()
         return Response(
             {'message':'Experience deleted successfully.'},
-            status=status.HTTP_204_NO_CONTENT
+            status=status.HTTP_200_OK
         )
 
 class ProjectCreateAPIView(APIView):
