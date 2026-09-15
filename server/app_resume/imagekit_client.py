@@ -7,17 +7,20 @@ imagekit = ImageKit(
 
 IMAGEKIT_URL_ENDPOINT = os.environ.get("IMAGEKIT_URL_ENDPOINT")
 
-def upload_resume_image(file, resume_id, remove_background):
+
+def upload_resume_image(file, resume_id, remove_background=False):
     transformation = "w-300,h-300,fo-face,z-0.75"
+
     if remove_background:
         transformation += ",e-bgremove"
 
     response = imagekit.files.upload(
-        file = file.read(),
+        file=file.read(),
         file_name=file.name,
-        folder=f'/resumes/{resume_id}/',
-        transformation= {
-            "pre" : transformation
+        folder=f"/resumes/{resume_id}/",
+        transformation={
+            "pre": transformation
         }
     )
+
     return response.url

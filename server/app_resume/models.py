@@ -43,7 +43,7 @@ class Skills(models.Model):
 class PersonalInfo(models.Model):
     """Model definition for PersonalInfo."""
     resume = models.OneToOneField( ResumeData, on_delete=models.CASCADE, related_name='personal_info' )
-    image = models.URLField( blank=True)
+    image = models.URLField( blank=True, null=True )
     full_name = models.CharField( max_length=30, blank=True )
     profession = models.CharField( max_length=30, blank=True )
     email = models.EmailField( blank=True )

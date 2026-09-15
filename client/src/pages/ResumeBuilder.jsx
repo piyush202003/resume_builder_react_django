@@ -94,25 +94,54 @@ const ResumeBuilder = () => {
 
   const saveResume = async () =>{
     try {
-      let updatedResumeData = structuredClone(resumeData)
-      // remove image from updatedResumeData
-      if(typeof resumeData.personal_info.image === 'object'){
-        delete updatedResumeData.personal_info.image
-      }
       const formData = new FormData();
-      formData.append('resumeId', resumeId)
-      formData.append('resumeData', JSON.stringify(updatedResumeData))
-      removeBackground && formData.append('removeBackground', true)
-      typeof resumeData.personal_info.image === 'object' && formData.append('image', resumeData.personal_info.image)
-      // const resume_details = new FormData()
 
-      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:formData}, {headers:{Authorization:`Bearer ${token}`}})
-      setResumeData(data.resume)
-      console.log(data.resume)
-      toast.success(data.message)
+      const updatedPersonalInfo = structuredClone(resumeData.personal_info);
+      const image = updatedPersonalInfo.image;
+
+      // Don't send image inside personalInfo
+      delete updatedPersonalInfo.image;
+
+      formData.append(
+        'personalInfo',
+        JSON.stringify(updatedPersonalInfo)
+      );
+
+      formData.append(
+        'removeBackground',
+        String(removeBackground)
+      );
+
+      // Only append if it's actually a new File
+      if (image instanceof File) {
+        formData.append('image', image);
+      }
+
+      const { data } = await api.patch(
+        `api/resume/update/${resumeId}/personal-info/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setResumeData(prev => ({
+        ...prev,
+        personal_info: data.personal_info,
+      }));
+
+      toast.success(data.message);
     } catch (error) {
-      toast.error(error?.response?.data?.error || error?.message)
+      toast.error(
+        error?.response?.data?.error ||
+        error?.response?.data?.non_field_errors ||
+        error?.message ||
+        'Something went wrong'
+      );
     }
+
   }
 
   return (

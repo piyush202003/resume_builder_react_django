@@ -1,3 +1,5 @@
+import json
+
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.shortcuts import render
@@ -6,6 +8,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 from .gemini_summariser import ai_job_description, ai_professional_summary, ai_upload_resume
@@ -13,7 +16,7 @@ from .gemini_summariser import ai_job_description, ai_professional_summary, ai_u
 from .imagekit_client import upload_resume_image
 
 from .models import Education, Experience, PersonalInfo, Project, ResumeData, Skills
-from .serializers import ResumeAllDetailsSerializer, ResumeSerializer
+from .serializers import PersonalInfoSerializer, ResumeAllDetailsSerializer, ResumeSerializer
 
 # Create your views here.
 class ResumeCreateAPIView(APIView):
@@ -88,13 +91,6 @@ class ResumeUpdateAPIView(APIView):
         serializer = ResumeSerializer(resume, data=request.data['resumeData'], partial=True)
         serializer.is_valid(raise_exception=True)
         resume = serializer.save()
-
-        image = request.FILES.get('image')
-        if image:
-            image_url = upload_resume_image(image, resume.id, request.data['removeBackground'])
-            personal_info = resume.personal_info
-            personal_info.image = image_url
-            personal_info.save()
 
         return Response(
             {
@@ -232,3 +228,67 @@ class UploadResumeAPIView(APIView):
                 {'error':message},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+# api/resume/{resume_id}/personal-info/
+class PersonalInfoUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]
+
+    def patch(self, request, resume_id):
+        try:
+            resume = ResumeData.objects.get(
+                id=resume_id,
+                user=request.user
+            )
+        except ResumeData.DoesNotExist:
+            return Response(
+                {'error': 'Resume not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        try:
+            personal_info = resume.personal_info
+        except PersonalInfo.DoesNotExist:
+            return Response(
+                {'error': 'Personal info not found.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
+
+        personal_info_data = request.data.get( 'personalInfo', '{}')
+
+        try:
+            personal_info_data = json.loads(personal_info_data)
+        except (json.JSONDecodeError, TypeError):
+            return Response(
+                {'error': 'Invalid personalInfo data.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        serializer = PersonalInfoSerializer(
+            instance=personal_info,
+            data=personal_info_data,
+            partial=True
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        image = request.FILES.get('image')
+
+        if image:
+            remove_background = request.data.get( 'removeBackground', 'false' ) == 'true'
+
+            image_url = upload_resume_image( image, resume.id, remove_background)
+            personal_info.image = image_url
+            personal_info.save(update_fields=['image'])
+
+        # Re-serialize because image may have changed
+        serializer = PersonalInfoSerializer(personal_info)
+
+        return Response(
+            {
+                'personal_info': serializer.data,
+                'message': 'Personal Info has been updated'
+            },
+            status=status.HTTP_200_OK
+        )

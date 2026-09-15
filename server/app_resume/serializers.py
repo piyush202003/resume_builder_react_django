@@ -11,11 +11,11 @@ class ResumeSerializer(serializers.ModelSerializer):
         fields = [ 'id', 'title', 'public', 'template', 'accent_color', 'professional_summary', 'created_at', 'updated_at', ]
         read_only_fields = [ 'id', 'created_at', 'updated_at' ]
 
-class PerosnalInfoSerializer(serializers.ModelSerializer):
+class PersonalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalInfo
-        fields = '__all__'
-        read_only_fileds = [ 'id', 'resume' ]
+        fields = [ 'id', 'image', 'full_name', 'profession', 'email', 'phone', 'location', 'linkedin', 'website', ]
+        read_only_fileds = [ 'id', 'image' ]
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
@@ -42,7 +42,7 @@ class SkillSerializer(serializers.ModelSerializer):
         read_only_fileds = [ 'id', 'resume' ]
 
 class ResumeAllDetailsSerializer(serializers.ModelSerializer):
-    personal_info = PerosnalInfoSerializer(read_only=True)
+    personal_info = PersonalInfoSerializer(read_only=True)
     experience = ExperienceSerializer(many=True, read_only=True)
     project = ProjectSerializer(many=True, read_only=True)
     education = EducationSerializer(many=True, read_only=True)
