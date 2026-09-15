@@ -68,7 +68,7 @@ class PersonalInfo(models.Model):
 
 class Experience(models.Model):
     """Model definition for Experience."""
-    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='experiences')
+    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='experience')
     company = models.CharField( max_length=150, blank=True )
     position = models.CharField( max_length=150, blank=True)
     start_date = models.DateField( blank=True)
@@ -92,7 +92,7 @@ class Experience(models.Model):
 
 class Project(models.Model):
     """Model definition for Project."""
-    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='projects')
+    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='project')
     name = models.CharField( max_length=150, blank=True)
     type = models.CharField( max_length=150, blank=True)
     description = models.TextField( max_length=2000, blank=True)
@@ -116,7 +116,7 @@ class Project(models.Model):
 
 class Education(models.Model):
     """Model definition for Education."""
-    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='educations')
+    resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='education')
     institution = models.CharField( max_length=200, blank=True)
     degree = models.CharField( max_length=100, blank=True)
     field = models.CharField( max_length=100, blank=True)

@@ -22,6 +22,9 @@ class ResumeCreateAPIView(APIView):
         serializer = ResumeSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         resume = serializer.save(user=request.user)
+        PersonalInfo.objects.create(
+            resume=resume
+        )
         return Response({
             'message': 'Resume created successfully',
             'resume': ResumeSerializer(resume).data,

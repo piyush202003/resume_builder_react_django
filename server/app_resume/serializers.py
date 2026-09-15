@@ -15,40 +15,40 @@ class PerosnalInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = PersonalInfo
         fields = '__all__'
-        read_only_fileds = [ 'id' ]
+        read_only_fileds = [ 'id', 'resume' ]
 
 class ExperienceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Experience
         fields = '__all__'
-        read_only_fileds = [ 'id' ]
+        read_only_fileds = [ 'id', 'resume' ]
 
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
         fields = '__all__'
-        read_only_fileds = [ 'id' ]
+        read_only_fileds = [ 'id', 'resume' ]
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
         fields = '__all__'
-        read_only_fileds = [ 'id' ]
+        read_only_fileds = [ 'id', 'resume' ]
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skills
         fields = [ 'id', 'type' ]
-        read_only_fileds = [ 'id' ]
+        read_only_fileds = [ 'id', 'resume' ]
 
 class ResumeAllDetailsSerializer(serializers.ModelSerializer):
     personal_info = PerosnalInfoSerializer(read_only=True)
-    experiences = ExperienceSerializer(many=True, read_only=True)
-    projects = ProjectSerializer(many=True, read_only=True)
-    educations = EducationSerializer(many=True, read_only=True)
+    experience = ExperienceSerializer(many=True, read_only=True)
+    project = ProjectSerializer(many=True, read_only=True)
+    education = EducationSerializer(many=True, read_only=True)
     skills = SkillSerializer(many=True, read_only=True)
 
     class Meta:
         model = ResumeData
-        fields = [ 'id', 'title', 'template', 'accent_color', 'professional_summary', 'updated_at', 'personal_info', 'experiences', 'projects', 'educations', 'skills']
+        fields = [ 'id', 'title', 'template', 'accent_color', 'public', 'professional_summary', 'updated_at', 'personal_info', 'experience', 'project', 'education', 'skills']
         read_only_fileds = [ 'id' ]

@@ -24,6 +24,7 @@ const ResumeBuilder = () => {
   const [resumeData, setResumeData] = useState({
     id:'',
     title:'',
+    professional_summary:'',
     personal_info:{},
     experience:[],
     education:[],
@@ -37,9 +38,6 @@ const ResumeBuilder = () => {
   const loadExistingResume = async () =>{
     try {
       const { data } = await api.get(`api/resume/details/${resumeId}/`, {headers:{Authorization:`Bearer ${token}`}})
-      if (data.personal_info===null){
-        data.personal_info={}
-      }
       setResumeData(data)
       document.title = data.title
     } catch (error) {
@@ -65,15 +63,18 @@ const ResumeBuilder = () => {
     loadExistingResume()
   },[])
 
-  const changeResumeVisibility = async () => {
-    
+  const saveResumeDetails = async( name, value) =>{
     try {
-      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:{public:!resumeData.public}}, {headers:{Authorization:`Bearer ${token}`}})
-      setResumeData({...resumeData, public: !resumeData.public})
-      toast.success('Resume public status updated')
+      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:{[name]:value}}, {headers:{Authorization:`Bearer ${token}`}})
+      toast.success('Resume Details updated')
     } catch (error) {
-      toast.error(error?.response?.data?.error || error?.message)
+      toast.error(error?.response?.data?.error || error?.response?.data?.detail || error?.message)
     }
+  }
+
+  const changeResumeVisibility = async () => {
+    saveResumeDetails('public', !resumeData.public)
+    setResumeData({...resumeData, public: !resumeData.public})
   }
 
   const handleShare = () =>{
@@ -94,19 +95,21 @@ const ResumeBuilder = () => {
   const saveResume = async () =>{
     try {
       let updatedResumeData = structuredClone(resumeData)
-
       // remove image from updatedResumeData
       if(typeof resumeData.personal_info.image === 'object'){
         delete updatedResumeData.personal_info.image
       }
-
-      const formData = new formData();
+      const formData = new FormData();
       formData.append('resumeId', resumeId)
       formData.append('resumeData', JSON.stringify(updatedResumeData))
       removeBackground && formData.append('removeBackground', true)
       typeof resumeData.personal_info.image === 'object' && formData.append('image', resumeData.personal_info.image)
-      
-      const { data } = await api.patch()
+      // const resume_details = new FormData()
+
+      const { data } = await api.patch(`api/resume/update/${resumeId}/`, {resumeData:formData}, {headers:{Authorization:`Bearer ${token}`}})
+      setResumeData(data.resume)
+      console.log(data.resume)
+      toast.success(data.message)
     } catch (error) {
       toast.error(error?.response?.data?.error || error?.message)
     }
@@ -134,8 +137,8 @@ const ResumeBuilder = () => {
               {/* Section Navigation */}
               <div className="flex justify-between items-center mb-6 border-b border-gray-300 py-1">
                 <div className="flex items-center gap-2">
-                  <TemplateSelector selectedTemplate={resumeData.template} onChange={(templateId) =>{setResumeData(prev => ({...prev, template:templateId}))}} />
-                  <ColorPicker selectedColor={resumeData.accent_color} onChange={(colorValue)=>{setResumeData(prev=>({...prev, accent_color:colorValue}))}} />
+                  <TemplateSelector selectedTemplate={resumeData.template} onChange={(templateId) =>{setResumeData(prev => ({...prev, template:templateId}));saveResumeDetails('template', templateId);}} />
+                  <ColorPicker selectedColor={resumeData.accent_color} onChange={(colorValue)=>{setResumeData(prev=>({...prev, accent_color:colorValue}));saveResumeDetails('accent_color', colorValue);}} />
                 </div>
                 <div className="flex items-center ">
                   {activeSectionIndex !== 0 && (
@@ -183,7 +186,7 @@ const ResumeBuilder = () => {
                   )}
               </div>
               
-              <button className="bg-linear-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm">
+              <button onClick={()=> {toast.promise(saveResume, {loading:'Saving...'})}} className="bg-linear-to-br from-green-100 to-green-200 ring-green-300 text-green-600 ring hover:ring-green-400 transition-all rounded-md px-6 py-2 mt-6 text-sm">
                 Save Changes
               </button>
             </div>
