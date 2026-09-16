@@ -58,7 +58,7 @@ const Dashboard = () => {
       setShowUploadResume(false)
       navigate(`/app/builder/${data.id}`)
     } catch (error) {
-      toast.error(error?.response?.data?.error || error?.message)
+      toast.error(error?.response?.data?.error || error?.message || 'Something went wrong.')
     } finally {
       setIsLoading(false)
     }

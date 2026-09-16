@@ -25,6 +25,9 @@ Environment variables / secrets
 .env.*
 !.env.example
 
+__pycache__/
+*.pyc
+
 Django static/media files
 
 staticfiles/
