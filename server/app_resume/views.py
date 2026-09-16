@@ -375,7 +375,7 @@ class ProjectCreateAPIView(APIView):
         project = serializer.save(resume=resume)
         return Response(
             {
-                'project':ProjectSerializer(project),
+                'project':ProjectSerializer(project).data,
                 'message':'New Project slot is created.'
             },
             status=status.HTTP_201_CREATED
@@ -395,7 +395,7 @@ class ProjectUpdateAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
 
-        return Response(serializer.data)
+        return Response(serializer.data,status=status.HTTP_200_OK)
 
 class ProjectDeleteAPIView(APIView):
     permission_classes=[IsAuthenticated]
@@ -414,7 +414,7 @@ class ProjectDeleteAPIView(APIView):
         project.delete()
         return Response(
             {'message':'Project deleted successfully.'},
-            status=status.HTTP_204_NO_CONTENT
+            status=status.HTTP_200_OK
         )
 
 class EducationCreateAPIView(APIView):
@@ -432,7 +432,7 @@ class EducationCreateAPIView(APIView):
         education = serializer.save(resume=resume)
         return Response(
             {
-                'education':EducationSerializer(education),
+                'education':EducationSerializer(education).data,
                 'message':'New Education slot has been created.'
             },
             status=status.HTTP_200_OK
@@ -488,7 +488,10 @@ class SkillCreateAPIView(APIView):
         serializer.is_valid(raise_exception=True)
         skill = serializer.save(resume=resume)
         return Response(
-            SkillSerializer(skill).data,
+            {
+                'skill':SkillSerializer(skill).data,
+                'message':'New Skill is added.'
+            },
             status=status.HTTP_201_CREATED
         )
 

@@ -33,19 +33,19 @@ class ExperienceSerializer(serializers.ModelSerializer):
 class ProjectSerializer(serializers.ModelSerializer):
     class Meta:
         model = Project
-        fields = [ 'id', 'name', 'project_type', 'description', 'github_url', 'live_url' ]
+        fields = ['id', 'name', 'type', 'description', 'github_url', 'live_url', ]
         read_only_fileds = [ 'id' ]
 
 class EducationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Education
-        fields = [ 'id', 'institution', 'degree', 'field', 'start_date', 'graduation_date', 'gpa']
+        fields = [ 'id', 'institution', 'degree', 'field', 'granduation_date', 'gpa', ]
         read_only_fileds = [ 'id' ]
 
 class SkillSerializer(serializers.ModelSerializer):
     class Meta:
         model = Skills
-        fields = [ 'id', 'type' ]
+        fields = [ 'id', 'name' ]
         read_only_fileds = [ 'id' ]
 
 class ResumeAllDetailsSerializer(serializers.ModelSerializer):

@@ -148,7 +148,7 @@ const ResumeBuilder = () => {
             )
           })
         )
-        toast.success('All experiences are updated.')
+        // toast.success('All experiences are updated.')
       } catch (error) {
         toast.error(
           error?.response?.data?.error ||
@@ -171,7 +171,7 @@ const ResumeBuilder = () => {
             )
           })
         )
-        toast.success('All educations are updated.')
+        // toast.success('All educations are updated.')
       } catch (error) {
         toast.error(
           error?.response?.data?.error ||
@@ -194,7 +194,7 @@ const ResumeBuilder = () => {
             )
           })
         )
-        toast.success('All projects are updated.')
+        // toast.success('All projects are updated.')
       } catch (error) {
         toast.error(
           error?.response?.data?.error ||
@@ -206,27 +206,28 @@ const ResumeBuilder = () => {
     }
 
     // update skills
-    if(resumeData.skills.length > 0){
-      try {
-        await Promise.all(
-          resumeData.skills.map( async (skl)=>{
-            const { data } = await api.patch(
-              `api/resume/${resumeId}/skills/${skl.id}/`,
-              skl,
-              {headers:{Authorization:`Bearer ${token}`}}
-            )
-          })
-        )
-        toast.success('All experiences are updated.')
-      } catch (error) {
-        toast.error(
-          error?.response?.data?.error ||
-          error?.response?.data?.non_field_errors ||
-          error?.message ||
-          'Something went wrong'
-        )
-      }
-    }
+    // if(resumeData.skills.length > 0){
+    //   try {
+    //     await Promise.all(
+    //       resumeData.skills.map( async (skl)=>{
+    //         console.log(skl)
+    //         const { data } = await api.patch(
+    //           `api/resume/${resumeId}/skills/${skl.id}/`,
+    //           skl,
+    //           {headers:{Authorization:`Bearer ${token}`}}
+    //         )
+    //       })
+    //     )
+    //     toast.success('All experiences are updated.')
+    //   } catch (error) {
+    //     toast.error(
+    //       error?.response?.data?.error ||
+    //       error?.response?.data?.non_field_errors ||
+    //       error?.message ||
+    //       'Something went wrong'
+    //     )
+    //   }
+    // }
   }
 
   return (
@@ -285,17 +286,17 @@ const ResumeBuilder = () => {
                   )}
                   {activeSection.id === 'education' && (
                     <div>
-                      <EducationForm data={resumeData.education} onChange={(data) => setResumeData(prev => ({...prev, education:data}))} />
+                      <EducationForm data={resumeData.education} onChange={(data) => setResumeData(prev => ({...prev, education:data}))}  resumeId={resumeId} />
                     </div>
                   )}
                   {activeSection.id === 'projects' && (
                     <div>
-                      <ProjectForm data={resumeData.project} onChange={(data) => setResumeData(prev => ({...prev, project:data}))} />
+                      <ProjectForm data={resumeData.project} onChange={(data) => setResumeData(prev => ({...prev, project:data}))} resumeId={resumeId} />
                     </div>
                   )}
                   {activeSection.id === 'skills' && (
                     <div>
-                      <SkillsForm data={resumeData.skills} onChange={(data) => setResumeData(prev => ({...prev, skills:data}))} />
+                      <SkillsForm data={resumeData.skills} onChange={(data) => setResumeData(prev => ({...prev, skills:data}))} resumeId={resumeId} />
                     </div>
                   )}
               </div>

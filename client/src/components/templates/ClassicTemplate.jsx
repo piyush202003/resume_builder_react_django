@@ -148,7 +148,7 @@ const ClassicTemplate = ({ data, accentColor }) => {
                     <div className="flex gap-4 flex-wrap">
                         {data.skills.map((skill, index) => (
                             <div key={index} className="text-gray-700">
-                                • {skill}
+                                • {skill.name}
                             </div>
                         ))}
                     </div>

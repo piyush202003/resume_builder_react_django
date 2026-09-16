@@ -119,7 +119,7 @@ const MinimalTemplate = ({ data, accentColor }) => {
                     </h2>
 
                     <div className="text-gray-700">
-                        {data.skills.join(" • ")}
+                        {data.skills.map((skill) => skill.name).join(" • ")}
                     </div>
                 </section>
             )}

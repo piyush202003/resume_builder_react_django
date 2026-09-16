@@ -98,7 +98,7 @@ const MinimalImageTemplate = ({ data, accentColor }) => {
                             </h2>
                             <ul className="space-y-1 text-sm">
                                 {data.skills.map((skill, index) => (
-                                    <li key={index}>{skill}</li>
+                                    <li key={index}>{skill.name}</li>
                                 ))}
                             </ul>
                         </section>

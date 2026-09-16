@@ -1,19 +1,47 @@
 import { Plus, Projector, Trash2 } from "lucide-react"
+import api from "../config/api"
+import { useSelector } from "react-redux"
+import toast from "react-hot-toast"
 
-const ProjectForm = ({ data, onChange }) => {
+const ProjectForm = ({ data, onChange, resumeId }) => {
     
-    const addProject = () =>{
+    const { token } = useSelector(state => state.auth)
+
+    const addProject = async () =>{
         const newProject = {
             name:'',
             type:'',
             description:'',
         }
-        onChange([...data, newProject])
+        try {
+            const response = await api.post(`api/resume/${resumeId}/projects/`, newProject, {headers:{Authorization:`Bearer ${token}`}}) 
+            onChange([...data, response.data.project])
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
     }
 
-    function removeProject(index){
-        const updated = data.filter((_,i)=> i !== index)
-        onChange(updated)
+    async function removeProject (index, project_id){
+        try {
+            const response = await api.delete(`api/resume/${resumeId}/projects/${project_id}/delete/`, {headers:{Authorization:`Bearer ${token}`}})
+            const updated = data.filter((_,i)=> i !== index)
+            onChange(updated)
+            console.log(response)
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
     }
 
     function updateProject(index, field, value) {
@@ -46,7 +74,7 @@ const ProjectForm = ({ data, onChange }) => {
                         <div key={index} className="p-4 border border-gray-200 rounded-lg space-y-3">
                             <div className="flex justify-between items-start">
                                 <h4>Project #{index+1}</h4>
-                                <button onClick={()=>removeProject(index)} className="text-red-500 hover:text-red-700 transition-colors">
+                                <button onClick={()=>removeProject(index, project.id)} className="text-red-500 hover:text-red-700 transition-colors">
                                     <Trash2 className="size-4" />
                                 </button>
                             </div>

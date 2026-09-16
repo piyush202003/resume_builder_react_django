@@ -1,21 +1,54 @@
 import { GraduationCap, Plus, Trash2 } from "lucide-react"
+import { useSelector } from "react-redux"
+import api from "../config/api"
+import toast from "react-hot-toast"
 
 
-const EducationForm = ({data, onChange}) => {
-    const addEducation = ()=>{
+const EducationForm = ({data, onChange, resumeId}) => {
+
+    const { token } = useSelector(state=>state.auth)
+
+    const addEducation = async ()=>{
         const newEducation = {
             institution:'',
             degree:'',
             field:'',
-            graduation_date:'',
+            graduation_date:null,
             gpa:''
         }
-        onChange([...data, newEducation])
+        try {
+            const response = await api.post(`api/resume/${resumeId}/educations/`, newEducation, {headers:{Authorization:`Bearer ${token}`}})
+            onChange([...data, response.data.education])
+            console.log(response)
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
+        
     }
 
-    const removeEducation = (index)=>{
-        const updated = data.filter((_ , i)=> i !== index)
-        onChange(updated)
+    const removeEducation = async (index, educationId)=>{
+        try {
+            const response = await api.delete(
+                `api/resume/${resumeId}/educations/${educationId}/delete/`,
+                {headers:{Authorization:`Bearer ${token}`}}
+            )
+            const updated = data.filter((_ , i)=> i !== index)
+            onChange(updated)
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
     }
 
     const updateEducation = (index, field, value)=>{
@@ -48,7 +81,7 @@ const EducationForm = ({data, onChange}) => {
                         <div key={index} className="p-4 border border-gray-200 rounded-lg space-y-3">
                             <div className="flex justify-between items-start">
                                 <h4>Education #{index+1}</h4>
-                                <button onClick={()=>removeEducation(index)} className="text-red-500 hover:text-red-700 transition-colors">
+                                <button onClick={()=>removeEducation(index, education.id)} className="text-red-500 hover:text-red-700 transition-colors">
                                     <Trash2 className="size-4" />
                                 </button>
                             </div>
@@ -57,7 +90,7 @@ const EducationForm = ({data, onChange}) => {
                                 <input value={education.institution || ''} onChange={(e)=>{updateEducation(index, 'institution', e.target.value)}} type="text" placeholder="Institution Name" className="px-3 py-2 text-sm" />
                                 <input value={education.degree || ''} onChange={(e)=>{updateEducation(index, 'degree', e.target.value)}} type="text" placeholder="Degree (e.g., Bachelor's, Master's)" className="px-3 py-2 text-sm" />
                                 <input value={education.field || ''} onChange={(e)=>{updateEducation(index, 'field', e.target.value)}} type="text" placeholder="Field of Study" className="px-3 py-2 text-sm" />
-                                <input value={education.graduation_date || ''} onChange={(e)=>{updateEducation(index, 'graducation_date', e.target.value)}} type="month" className="px-3 py-2 text-sm" />
+                                <input value={education.graduation_date || ''} onChange={(e)=>{updateEducation(index, 'graduation_date', e.target.value)}} type="month" className="px-3 py-2 text-sm"/>
                                 <input value={education.gpa || ''} onChange={(e)=>{updateEducation(index, 'gpa', e.target.value)}} type="text" placeholder="GPA (optional)" className="px-3 py-2 text-sm" />
                             </div>
                         </div>

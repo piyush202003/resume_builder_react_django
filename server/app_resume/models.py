@@ -71,8 +71,8 @@ class Experience(models.Model):
     resume = models.ForeignKey(ResumeData, on_delete=models.CASCADE, related_name='experience')
     company = models.CharField( max_length=150, blank=True )
     position = models.CharField( max_length=150, blank=True)
-    start_date = models.DateField( blank=True, null=True)
-    end_date = models.DateField( blank=True, null=True )
+    start_date = models.CharField( blank=True, null=True)
+    end_date = models.CharField( blank=True, null=True )
     description = models.TextField( max_length=2000, blank=True)
     is_current = models.BooleanField( default=False )
     class Meta:
@@ -120,7 +120,7 @@ class Education(models.Model):
     institution = models.CharField( max_length=200, blank=True)
     degree = models.CharField( max_length=100, blank=True)
     field = models.CharField( max_length=100, blank=True)
-    granduation_date = models.DateField( blank=True, null=True)
+    granduation_date = models.CharField( blank=True, null=True)
     gpa = models.CharField( max_length=10, blank=True)
     
     class Meta:

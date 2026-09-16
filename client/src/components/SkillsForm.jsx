@@ -1,25 +1,52 @@
 import { Plus, Sparkles, X } from "lucide-react"
 import { useState } from "react"
+import { useSelector } from "react-redux"
+import api from "../config/api"
+import toast from "react-hot-toast"
 
-const SkillsForm = ({ data, onChange }) => {
+const SkillsForm = ({ data, onChange, resumeId }) => {
 
+    const { token } = useSelector(state=>state.auth)
     const [newSkill, setNewSkill] = useState('')
 
-    const addSkill = ()=>{
-        if(newSkill.trim() && !data.includes(newSkill.trim())){
-            onChange([...data, newSkill.trim()])
-            setNewSkill('')
+    const addSkill = async ()=>{
+        try {
+            const skill = newSkill.trim()
+            if( skill && !data.some((item)=> item.name === skill)){
+                const response = await api.post(`api/resume/${resumeId}/skills/`,{name:skill}, {headers:{Authorization:`Bearer ${token}`}})
+                onChange([...data, response.data.skill])
+                setNewSkill('')
+            }
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
         }
+
     }
 
-    const removeSkill = (indexToRemove)=>{
-        onChange(data.filter((_, index) => index !== indexToRemove))
+    const removeSkill = async (indexToRemove, skillId)=>{
+        try {
+            const response = await api.delete(`api/resume/${resumeId}/skills/${skillId}/delete/`,{headers:{Authorization:`Bearer ${token}`}})
+            onChange(data.filter((_, index) => index !== indexToRemove))
+            toast.success(response.data.message)
+        } catch (error) {
+            toast.error(
+                error?.response?.data?.error ||
+                error?.response?.data?.non_field_errors ||
+                error?.message ||
+                'Something went wrong'
+            )
+        }
     }
 
     const handleKeyPress = (e) => {
         if(e.key === 'Enter'){
             e.preventDefault()
-            console.log('enter key is working')
             addSkill()
         }
     }
@@ -40,8 +67,8 @@ const SkillsForm = ({ data, onChange }) => {
                 <div className="flex flex-wrap gap-2">
                     {data.map((skill, index) => (
                         <span key={index} className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm">
-                            {skill}
-                            <button className="ml-1 hover:bg-glue-200 rounded-full p-0.5 transition-colors">
+                            {skill.name}
+                            <button onClick={()=>removeSkill(index, skill.id)} className="ml-1 hover:bg-glue-200 rounded-full p-0.5 transition-colors">
                                 <X className="w-3 h-3" />
                             </button>
                         </span>

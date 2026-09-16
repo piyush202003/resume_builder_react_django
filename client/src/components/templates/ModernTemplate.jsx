@@ -161,7 +161,7 @@ const ModernTemplate = ({ data, accentColor }) => {
 										className="px-3 py-1 text-sm text-white rounded-full"
 										style={{ backgroundColor: accentColor }}
 									>
-										{skill}
+										{skill.name}
 									</span>
 								))}
 							</div>
