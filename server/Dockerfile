@@ -1,5 +1,5 @@
 # Use Python 3.11
-FROM python:3.11-silm
+FROM python:3.11-slim
 
 # Prevent Python from creating .pyc files
 ENV PYTHONUNBUFFERED=1

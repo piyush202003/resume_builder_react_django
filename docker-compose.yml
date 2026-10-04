@@ -2,7 +2,7 @@ services:
   db:
     image: postgres:16-alpine
     env_file:
-      - .env.postgres
+      - ./server/.env.postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -26,7 +26,7 @@ services:
     build:
       context: ./client
       args:
-        VITE_BASE_URL: "http://backend:8000/"
+        VITE_BASE_URL: "http://127.0.0.1:8000/"
     ports:
       - "5173:80"
     depends_on:
